@@ -1,5 +1,7 @@
 package com.kafka.producerexample.resource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.kafka.producerexample.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,13 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserResource {
 
     @Autowired
-    KafkaTemplate<String, User> kafkaTemplate;
-    private static final String TOPIC = "testTopic";
+    KafkaTemplate<String, String> kafkaTemplate;
+    private static final String TOPIC = "test";
 
     @GetMapping("/publish")
     public String post(){
-
-        kafkaTemplate.send(TOPIC,new User("nupur","tech"));
+        User user = new User("nupur","tech");
+        ObjectMapper Obj = new ObjectMapper();
+        try{
+            String jsonStr = Obj.writeValueAsString(user);
+            kafkaTemplate.send(TOPIC,jsonStr);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
         return "Published successfully";
     }
 }

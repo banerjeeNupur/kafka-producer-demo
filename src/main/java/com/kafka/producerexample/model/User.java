@@ -1,5 +1,8 @@
 package com.kafka.producerexample.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+
 public class User {
     private String name;
     private String department;
